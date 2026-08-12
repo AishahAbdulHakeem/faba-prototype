@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FABA — City Page Redesign Prototype</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --navy:#0E2C32;
+  --navy-soft:#2C4A52;
+  --red:#AA291F;
+  --red-soft:#C15046;
+  --bg:#FFFFFF;
+  --surface:#F6F4EF;
+  --border:#E4E0D6;
+  --muted:#7C8A8D;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--navy);}
+
+.topbar{
+  position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:12px 24px;flex-wrap:wrap;gap:10px;
+}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.topbar-left img{height:38px;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.city-select{
+  padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:600;color:var(--navy);background:#fff;
+}
+.toggle-wrap{display:flex;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:4px;}
+.toggle-btn{border:none;background:transparent;padding:8px 18px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:var(--navy-soft);}
+.toggle-btn.active{background:var(--navy);color:#fff;}
+.note{font-size:11.5px;color:var(--muted);width:100%;}
+
+.wrap{max-width:980px;margin:0 auto;padding:32px 24px 90px;}
+
+h1.pagetitle{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;margin:0 0 6px;color:var(--navy);}
+.sub{color:var(--navy-soft);font-size:14px;margin:0 0 26px;max-width:660px;line-height:1.55;}
+
+/* ---------- CURRENT LAYOUT ---------- */
+#current h2{font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:700;color:var(--navy);margin:30px 0 10px;}
+#current p{font-size:14.5px;line-height:1.7;color:#222;margin:0 0 12px;}
+#current ul{margin:0 0 12px;padding-left:22px;}
+#current li{font-size:14.5px;line-height:1.7;color:#222;margin-bottom:6px;}
+#current .wall-marker{margin-top:6px;padding:10px 14px;background:#FBEAE8;border-left:3px solid var(--red);font-size:12.5px;color:var(--red);font-style:italic;}
+.current-agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:10px;}
+.current-agent-card{padding:14px 10px;text-align:center;}
+.current-agent-card .name{font-weight:600;font-size:14px;color:var(--navy);}
+.current-agent-card .brokerage{font-size:12px;color:var(--muted);}
+
+/* ---------- REDESIGNED LAYOUT ---------- */
+#redesign{display:none;}
+.hero{background:var(--navy);border-radius:16px;padding:32px 30px;color:#fff;margin-bottom:24px;}
+.hero .eyebrow{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft);margin:0 0 8px;}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;margin:0 0 10px;color:#fff;}
+.hero p{font-size:14px;color:#CADCE0;max-width:620px;line-height:1.6;margin:0;}
+
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;}
+.stat-card .label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px;}
+.stat-card .value{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--navy);}
+.stat-card .value.red{color:var(--red);}
+
+.section-label{font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--red);margin:28px 0 12px;}
+
+.hood-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:6px;}
+.hood-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px;}
+.hood-card .hname{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:4px;}
+.hood-card .hdesc{font-size:11px;color:var(--navy-soft);line-height:1.4;}
+
+.search-mini{display:flex;gap:10px;margin:24px 0;}
+.search-mini input{flex:1;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:13.5px;}
+.search-mini select{padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:13.5px;background:#fff;}
+
+.redesign-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;}
+.redesign-card{border:1px solid var(--border);border-radius:12px;padding:13px;text-align:center;background:#fff;}
+.avatar-r{width:58px;height:58px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;}
+.redesign-card .name{font-weight:600;font-size:13.5px;color:var(--navy);}
+.redesign-card .brokerage{font-size:11px;color:var(--muted);}
+
+/* Full-content tabs: nothing hidden, just organized */
+.insights{border:1px solid var(--border);border-radius:14px;margin-top:30px;overflow:hidden;}
+.insights-head{padding:16px 20px 0;}
+.insights-head .t{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin:0 0 2px;}
+.insights-head .s{font-size:12px;color:var(--muted);margin:0 0 14px;}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;padding:0 20px;border-bottom:1px solid var(--border);}
+.tab-btn{border:none;background:transparent;padding:10px 14px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:var(--navy-soft);cursor:pointer;border-bottom:2px solid transparent;}
+.tab-btn.active{color:var(--red);border-bottom:2px solid var(--red);}
+.tab-panel{display:none;padding:20px;}
+.tab-panel.active{display:block;}
+.tab-panel p{font-size:13.5px;line-height:1.65;color:var(--navy-soft);margin:0 0 10px;}
+.tab-panel ul{margin:0 0 10px;padding-left:20px;}
+.tab-panel li{font-size:13.5px;line-height:1.65;color:var(--navy-soft);margin-bottom:5px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <img src="data:image/png;base64,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" alt="FABA">
+  </div>
+  <div class="topbar-right">
+    <select class="city-select" id="citySelect" onchange="render()"></select>
+    <div class="toggle-wrap">
+      <button class="toggle-btn active" id="btn-current" onclick="showView('current')">Current Layout</button>
+      <button class="toggle-btn" id="btn-redesign" onclick="showView('redesign')">Redesigned</button>
+    </div>
+  </div>
+  <div class="note">One template, same structure and every word of copy, driven entirely by which city is selected above.</div>
+</div>
+
+<div class="wrap">
+  <div id="current"></div>
+  <div id="redesign"></div>
+</div>
+
+<script>
+const CITIES = {
+
+"washington-dc": {
+  name: "Washington, DC",
+  eyebrow: "Washington, DC",
+  heroBlurb: "A high-demand, supply-constrained market shaped by federal employment, global institutions, and tight inventory. Working with an agent who understands DC's micro-markets makes the difference.",
+  stats: { median: "$700K", range: "$500K–$1.5M+", days: "15–35" },
+  neighborhoods: [
+    {n:"Northwest DC", d:"Georgetown, Dupont Circle, Logan Circle — high demand, premium pricing"},
+    {n:"Capitol Hill", d:"Historic rowhomes, strong demand and stability"},
+    {n:"Northeast DC", d:"Brookland, NoMa — growth and redevelopment"},
+    {n:"Southeast DC", d:"Navy Yard, Anacostia — rapid development activity"},
+  ],
+  agents: [
+    {name:"Rahkiya Reid", brokerage:"Compass DC"},
+    {name:"Ericka Black", brokerage:"Keller Williams Capital"},
+    {name:"Harold Kelly", brokerage:"Long & Foster"},
+    {name:"Bunmi Akinyosoye", brokerage:"eXp Realty DMV"},
+    {name:"Ashley Ogunraiyewa", brokerage:"RE/MAX Capital"},
+  ],
+  overviewParas: [
+    "Washington, DC is one of the most influential and resilient real estate markets in the United States. As the nation's capital, DC is driven by federal government activity, global institutions, and a highly educated, high-income workforce.",
+    "In 2026, Washington, DC operates as a high-demand, supply-constrained, policy-driven market, where pricing and demand are shaped by government stability, limited land, and consistent population turnover.",
+  ],
+  pricingList: [
+    "<b>Median Home Price:</b> ~$700,000",
+    "<b>Typical Range:</b> $500,000 – $1.5M+",
+    "<b>Entry-Level Condos:</b> $350,000 – $600,000",
+    "<b>Townhomes / Rowhomes:</b> $600,000 – $1.2M",
+    "<b>Luxury Homes:</b> $1.5M – $5M+",
+    "<b>Average Days on Market:</b> 15–35 days",
+  ],
+  pricingNote: "Inventory remains tight, particularly in desirable neighborhoods and price bands.",
+  tabs: {
+    "Why Buyers Are Moving Here": {
+      paras: ["DC's appeal is driven by stability, income, and long-term value.", "Washington, DC offers a stability-driven housing market with consistent high-end demand."],
+      bullets: ["Federal government employment and contracting ecosystem","Global institutions (World Bank, IMF, embassies)","High-income, highly educated workforce","Limited housing supply due to geographic and zoning constraints","Strong long-term appreciation history"]
+    },
+    "Neighborhoods in Detail": {
+      paras: ["Washington, DC is a hyper-local, neighborhood-driven market. Buyers often evaluate walkability and access to Metro, neighborhood identity and long-term growth, and property type (condo vs rowhome vs single-family)."],
+      bullets: ["<b>Northwest DC</b> (Georgetown, Dupont Circle, Logan Circle): High demand, walkability, premium pricing","<b>Capitol Hill:</b> Historic rowhomes with strong demand and stability","<b>Northeast DC</b> (Brookland, NoMa): Growth and redevelopment","<b>Southeast DC</b> (Navy Yard, Anacostia): Rapid development and investment activity"]
+    },
+    "Buying: Competitive + Strategic": {
+      paras: ["DC is a highly competitive and fast-moving market. This market is ideal for high-income professionals, first-time buyers entering via condos, and long-term investors."],
+      bullets: ["Multiple-offer situations in desirable neighborhoods","Strong demand in entry-level and mid-range segments","Importance of speed and strong financing"]
+    },
+    "Selling: Precision Matters": {
+      paras: ["For sellers, DC offers strong demand, but buyers are informed and selective. Homes that align with location + condition + price precision perform best."],
+      bullets: ["Price precisely based on micro-neighborhood comps","Highlight walkability, transit access, and lifestyle","Invest in staging and presentation"]
+    },
+    "Who's Buying": {
+      paras: ["Washington, DC attracts a highly stable and affluent buyer base, creating a high-income, stability-driven demand environment."],
+      bullets: ["Federal employees and contractors","Policy, legal, and consulting professionals","International buyers","Local move-up buyers"]
+    },
+    "Investment Outlook": {
+      paras: ["Washington, DC is considered a long-term appreciation + rental stability market."],
+      bullets: ["Strong rental demand across all segments","High entry price points with lower cash-flow yields","Long-term appreciation supported by economic stability","Investors often focus on condos in high-demand areas, multi-family properties, and long-term hold strategies"]
+    },
+    "Looking Ahead": {
+      paras: ["Looking ahead, Washington, DC is expected to maintain strong demand due to government and global presence, continue experiencing supply constraints, and deliver long-term appreciation with periodic market cycles. It remains one of the most resilient and strategically important housing markets in the U.S."],
+      bullets: []
+    },
+  }
+},
+
+"los-angeles": {
+  name: "Los Angeles, CA",
+  eyebrow: "Los Angeles, CA",
+  heroBlurb: "A high-demand, globally influenced market driven by limited inventory, strong job sectors, and long-term desirability. Understanding LA's micro-markets is essential to navigating it well.",
+  stats: { median: "$950K", range: "$700K–$2M+", days: "20–45" },
+  neighborhoods: [
+    {n:"Westside", d:"Santa Monica, Brentwood — high demand, luxury, coastal appeal"},
+    {n:"Beverly Hills / Bel Air", d:"Ultra-luxury, global buyer interest"},
+    {n:"Downtown LA", d:"Urban living, condos, mixed-use development"},
+    {n:"San Fernando Valley", d:"More accessible pricing with strong demand"},
+  ],
+  agents: [
+    {name:"Priya Delgado", brokerage:"Habitat Realty Group"},
+    {name:"Cassius Whitfield", brokerage:"The Agency LA"},
+    {name:"Nadia Fontaine", brokerage:"Compass LA"},
+    {name:"Elias Thornburg", brokerage:"Habitat Realty Group"},
+  ],
+  overviewParas: [
+    "Los Angeles, California is one of the largest and most influential real estate markets in the world. Known for its global appeal, diverse neighborhoods, and economic power, Los Angeles offers a highly complex and segmented housing market.",
+    "In 2026, Los Angeles operates as a high-demand, supply-constrained, globally influenced market, driven by limited inventory, strong job sectors, and long-term desirability.",
+  ],
+  pricingList: [
+    "<b>Median Home Price:</b> ~$950,000",
+    "<b>Typical Range:</b> $700,000 – $2M+",
+    "<b>Entry-Level Homes:</b> $650,000 – $850,000",
+    "<b>Luxury Homes:</b> $2M – $10M+",
+    "<b>Condos / Townhomes:</b> ~$500,000 – $1.2M",
+    "<b>Average Days on Market:</b> 20–45 days",
+  ],
+  pricingNote: "Inventory remains tight, especially in high-demand neighborhoods.",
+  tabs: {
+    "Why Buyers Are Moving Here": {
+      paras: ["Los Angeles remains a top destination despite high costs.", "Los Angeles offers a prestige-driven housing market with unmatched global demand."],
+      bullets: ["Global city status with international demand","Major industries (entertainment, tech, healthcare, logistics)","Limited housing supply relative to population","Lifestyle appeal (weather, culture, beaches, entertainment)","Long-term appreciation trends"]
+    },
+    "Neighborhoods in Detail": {
+      paras: ["Los Angeles is a hyper-local market. Buyers often evaluate micro-location and neighborhood identity, property type (single-family vs condo), and proximity to employment and lifestyle amenities."],
+      bullets: ["<b>Westside</b> (Santa Monica, Brentwood): High demand, luxury, coastal appeal","<b>Beverly Hills / Bel Air:</b> Ultra-luxury, global buyer interest","<b>Downtown LA:</b> Urban living, condos, mixed-use development","<b>San Fernando Valley:</b> More accessible pricing with strong demand","<b>South LA / Inglewood:</b> Growth and redevelopment opportunities"]
+    },
+    "Buying: Competitive + Strategic": {
+      paras: ["Los Angeles is a highly competitive and complex market. This market is ideal for high-income buyers, long-term investors, and buyers seeking lifestyle and appreciation."],
+      bullets: ["Strong competition in desirable neighborhoods","Multiple-offer situations in key price ranges","Importance of local expertise and timing"]
+    },
+    "Selling: Positioning Is Everything": {
+      paras: ["For sellers, Los Angeles offers strong demand, but presentation is critical. Homes that are well-positioned within their specific neighborhood segment perform best."],
+      bullets: ["Highlight location, lifestyle, and unique property features","Invest in staging and marketing","Price strategically based on micro-market trends"]
+    },
+    "Who's Buying": {
+      paras: ["Los Angeles attracts a highly diverse and global buyer base, creating a multi-layered, global demand environment."],
+      bullets: ["Local high-income professionals","International buyers","Tech and entertainment industry professionals","Investors and luxury buyers"]
+    },
+    "Investment Outlook": {
+      paras: ["Los Angeles is considered a long-term appreciation market."],
+      bullets: ["Strong historical appreciation","High rental demand across multiple segments","Lower cash-flow yields but strong equity growth","Investors often focus on long-term appreciation plays, multi-family properties, and high-demand rental neighborhoods"]
+    },
+    "Looking Ahead": {
+      paras: ["Los Angeles is expected to maintain strong demand due to limited supply, continue attracting global buyers, and experience long-term appreciation despite short-term fluctuations. It remains one of the most important and resilient housing markets in the world."],
+      bullets: []
+    },
+  }
+},
+
+};
+
+let currentCity = "washington-dc";
+
+function populateSelect(){
+  const sel = document.getElementById('citySelect');
+  Object.keys(CITIES).forEach(slug=>{
+    const opt = document.createElement('option');
+    opt.value = slug; opt.textContent = CITIES[slug].name;
+    sel.appendChild(opt);
+  });
+  sel.value = currentCity;
+}
+
+function initials(n){return n.split(" ").map(p=>p[0]).slice(0,2).join("").toUpperCase();}
+const COLORS = ["#AA291F","#0E2C32","#7C8A8D","#C15046","#2C4A52"];
+
+function renderCurrent(city){
+  const el = document.getElementById('current');
+  let h = `<h1 class="pagetitle">${city.name} Real Estate Market Overview</h1>
+  <p class="sub">Recreated using the real, live text from the current page, in the order it actually appears.</p>`;
+  city.overviewParas.forEach(p => h += `<p>${p}</p>`);
+
+  h += `<h2>Why Buyers Are Moving to ${city.name}</h2>`;
+  h += `<p>${city.tabs["Why Buyers Are Moving Here"].paras[0]}</p>`;
+  h += `<ul>` + city.tabs["Why Buyers Are Moving Here"].bullets.map(b=>`<li>${b}</li>`).join("") + `</ul>`;
+  if(city.tabs["Why Buyers Are Moving Here"].paras[1]) h += `<p>${city.tabs["Why Buyers Are Moving Here"].paras[1]}</p>`;
+
+  h += `<h2>Pricing Trends and Housing Mix</h2>
+  <p>${city.name} sits in a high price tier, with variation based on neighborhood and property type.</p>
+  <ul>` + city.pricingList.map(p=>`<li>${p}</li>`).join("") + `</ul>
+  <p>${city.pricingNote}</p>`;
+
+  const nbhd = city.tabs["Neighborhoods in Detail"];
+  h += `<h2>Neighborhoods and Local Breakdown</h2><p>${nbhd.paras[0]}</p><ul>` + nbhd.bullets.map(b=>`<li>${b}</li>`).join("") + `</ul>`;
+
+  ["Buying: Competitive + Strategic","Selling: Precision Matters","Selling: Positioning Is Everything","Who's Buying","Investment Outlook","Looking Ahead"].forEach(key=>{
+    if(!city.tabs[key]) return;
+    h += `<h2>${key.replace("Who's Buying", "Buyer Profiles and Demand Sources").replace("Looking Ahead","What to Expect Moving Forward")}</h2>`;
+    city.tabs[key].paras.forEach(p=> h += `<p>${p}</p>`);
+    if(city.tabs[key].bullets.length) h += `<ul>` + city.tabs[key].bullets.map(b=>`<li>${b}</li>`).join("") + `</ul>`;
+  });
+
+  h += `<h2>Find a Black Real Estate Agent in ${city.name}</h2>
+  <p>Explore our network of experienced Black real estate agents serving ${city.name}. Whether you're purchasing your first home, relocating, or investing, we connect you with professionals who understand the market, the process, and your long-term goals.</p>`;
+
+  h += `<div class="wall-marker">By this point, a visitor has scrolled through every section above before reaching a single agent.</div>`;
+
+  h += `<h2>Search Black Real Estate Agents and Realtors</h2><p>Narrow your search by browsing through our database of agents below.</p><div class="current-agent-grid" id="current-agent-grid"></div>`;
+
+  el.innerHTML = h;
+  const grid = document.getElementById('current-agent-grid');
+  const sizes = [{w:120,h:150},{w:90,h:90},{w:150,h:100},{w:100,h:130},{w:130,h:95}];
+  city.agents.forEach((a,i)=>{
+    const s = sizes[i % sizes.length];
+    const div = document.createElement('div');
+    div.className = 'current-agent-card';
+    div.innerHTML = `<div style="width:${s.w}px;height:${s.h}px;background:${COLORS[i%COLORS.length]};margin:0 auto 10px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;">${initials(a.name)}</div>
+      <div class="name">${a.name}</div><div class="brokerage">${a.brokerage}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function renderRedesign(city){
+  const el = document.getElementById('redesign');
+  let h = `<div class="hero">
+    <p class="eyebrow">${city.eyebrow}</p>
+    <h1>Find a Black Real Estate Agent in ${city.name}</h1>
+    <p>${city.heroBlurb}</p>
+  </div>
+  <div class="stat-row">
+    <div class="stat-card"><div class="label">Median Home Price</div><div class="value">${city.stats.median}</div></div>
+    <div class="stat-card"><div class="label">Typical Range</div><div class="value">${city.stats.range}</div></div>
+    <div class="stat-card"><div class="label">Avg. Days on Market</div><div class="value red">${city.stats.days}</div></div>
+  </div>
+  <div class="section-label">Neighborhoods at a Glance</div>
+  <div class="hood-row">` + city.neighborhoods.map(nh=>`<div class="hood-card"><div class="hname">${nh.n}</div><div class="hdesc">${nh.d}</div></div>`).join("") + `</div>
+  <div class="search-mini">
+    <input type="text" placeholder="Search by agent or brokerage name">
+    <select><option>Any specialty</option><option>First-Time Buyers</option><option>Investment Properties</option><option>Luxury Homes</option><option>Relocation</option></select>
+  </div>
+  <div class="section-label" style="margin-top:6px;">Agents Serving ${city.name}</div>
+  <div class="redesign-grid" id="redesign-agent-grid"></div>
+
+  <div class="insights">
+    <div class="insights-head">
+      <p class="t">Full ${city.name} Market Analysis</p>
+      <p class="s">Every section from the current page, organized by topic. Nothing has been removed.</p>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div id="tab-panels"></div>
+  </div>`;
+
+  el.innerHTML = h;
+  const grid = document.getElementById('redesign-agent-grid');
+  city.agents.forEach((a,i)=>{
+    const div = document.createElement('div');
+    div.className = 'redesign-card';
+    div.innerHTML = `<div class="avatar-r" style="background:${COLORS[i%COLORS.length]}">${initials(a.name)}</div><div class="name">${a.name}</div><div class="brokerage">${a.brokerage}</div>`;
+    grid.appendChild(div);
+  });
+
+  const tabsEl = document.getElementById('tabs');
+  const panelsEl = document.getElementById('tab-panels');
+  const keys = Object.keys(city.tabs);
+  keys.forEach((key,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i===0 ? ' active' : '');
+    btn.textContent = key;
+    btn.onclick = () => selectTab(i);
+    tabsEl.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel' + (i===0 ? ' active' : '');
+    let pc = city.tabs[key].paras.map(p=>`<p>${p}</p>`).join("");
+    if(city.tabs[key].bullets.length) pc += `<ul>` + city.tabs[key].bullets.map(b=>`<li>${b}</li>`).join("") + `</ul>`;
+    panel.innerHTML = pc;
+    panelsEl.appendChild(panel);
+  });
+}
+
+function selectTab(i){
+  document.querySelectorAll('.tab-btn').forEach((b,idx)=>b.classList.toggle('active', idx===i));
+  document.querySelectorAll('.tab-panel').forEach((p,idx)=>p.classList.toggle('active', idx===i));
+}
+
+function render(){
+  currentCity = document.getElementById('citySelect').value;
+  const city = CITIES[currentCity];
+  renderCurrent(city);
+  renderRedesign(city);
+}
+
+function showView(view){
+  document.getElementById('current').style.display = view === 'current' ? 'block' : 'none';
+  document.getElementById('redesign').style.display = view === 'redesign' ? 'block' : 'none';
+  document.getElementById('btn-current').classList.toggle('active', view === 'current');
+  document.getElementById('btn-redesign').classList.toggle('active', view === 'redesign');
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+populateSelect();
+render();
+</script>
+</body>
+</html>
